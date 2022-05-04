@@ -42,3 +42,5 @@ docker exec -ti kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-serve
 # Produce a message
 
 # Get topic statistics
+
+## Project is still in development <img src="https://img.icons8.com/emoji/48/000000/woman-construction-worker.png"/>
