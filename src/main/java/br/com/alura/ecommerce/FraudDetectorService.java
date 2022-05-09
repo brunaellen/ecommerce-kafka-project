@@ -12,25 +12,30 @@ public class FraudDetectorService {
     public static void main(String[] args) {
         var consumer = new KafkaConsumer<String, String>(properties());
         consumer.subscribe(Collections.singletonList("ECOMMERCE_NEW_ORDER"));
-        var records = consumer.poll(Duration.ofMillis(100));
 
-        if(records.isEmpty()) {
-           System.out.println("Records not found");
-        }
+        while(true) {
+            var records = consumer.poll(Duration.ofMillis(100));
 
-        for(var record : records) {
-            System.out.println("Processing new orders, checking for fraud");
-            System.out.println("____________________________________");
-            System.out.println(record.key());
-            System.out.println(record.value());
-            System.out.println(record.partition());
-            System.out.println(record.offset());
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (!records.isEmpty()) {
+                System.out.println("The number of records found is : "+ records.count());
+                for (var record : records) {
+                    System.out.println("____________________________________");
+                    System.out.println("Processing new orders, checking for fraud");
+                    System.out.println(record.key());
+                    System.out.println(record.value());
+                    System.out.println(record.partition());
+                    System.out.println(record.offset());
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Order processed");
+                }
+                continue;
             }
-            System.out.println("Order processed");
+
+
         }
     }
 
