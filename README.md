@@ -34,6 +34,9 @@ docker exec -ti kafka /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookee
 ## Check messages sent for a specifying a topic 
 docker exec -ti kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ECOMMERCE_NEW_ORDER --from-beginning
 
+## Alter number of partitions in a topic
+docker exec -ti kafka /opt/kafka/bin/kafka-topics.sh --alter --zookeeper zookeeper:2181 --topic ECOMMERCE_NEW_ORDER --partitions 3
+
 # reference: https://gist.github.com/DevoKun/01b6c9963d5508579f4cbd75d52640a9#run-kafka-commands-inside-the-container
 ```
 
