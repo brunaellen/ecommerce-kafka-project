@@ -13,26 +13,29 @@ import java.util.concurrent.ExecutionException;
 public class NewOrderMain {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         var producer = new KafkaProducer<String, String>(properties());
-        var key = UUID.randomUUID().toString();
-        var value = "1234,6543,200";
-        var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
 
-        Callback callback = (data, exception) -> {
-            if (exception != null) {
-                exception.printStackTrace();
-                return;
-            }
-            System.out.println("success sending " + data.topic()
-                    + ":::partition " + data.partition()
-                    + "/ offset " + data.offset()
-                    + "/ time " + data.timestamp());
-        };
+        for(var i = 0; i< 10; i++) {
+            var key = UUID.randomUUID().toString();
+            var value = "1234,6543,200";
+            var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
 
-        producer.send(record, callback).get();
+            Callback callback = (data, exception) -> {
+                if (exception != null) {
+                    exception.printStackTrace();
+                    return;
+                }
+                System.out.println("success sending " + data.topic()
+                        + ":::partition " + data.partition()
+                        + "/ offset " + data.offset()
+                        + "/ time " + data.timestamp());
+            };
 
-        var email = "Thank you for your order! we are processing your order";
-        var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
-        producer.send(emailRecord, callback).get();
+            producer.send(record, callback).get();
+
+            var email = "Thank you for your order! we are processing your order";
+            var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
+            producer.send(emailRecord, callback).get();
+        }
     }
 
     private static Properties properties() {
